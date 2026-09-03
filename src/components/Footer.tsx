@@ -71,12 +71,12 @@ export default function Footer({ scrollToTop, openGallery }: FooterProps) {
                   <span>+91 94443 07037</span>
                 </a>
               </li>
-              <li>
-                <a href="mailto:eromartindia@gmail.com" className="flex items-center gap-3 hover:text-orange-400 transition-colors group">
-                  <div className="p-1.5 bg-gray-900 rounded-lg group-hover:bg-orange-500/10 transition-colors">
-                    <Mail size={14} className="text-orange-400" />
-                  </div>
-                  <span>eromartindia@gmail.com</span>
+              <li className="flex items-center gap-3 hover:text-orange-400 transition-colors group">
+                <div className="p-1.5 bg-gray-900 rounded-lg group-hover:bg-orange-500/10 transition-colors">
+                  <Mail size={14} className="text-orange-400" />
+                </div>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=eromartindia@gmail.com&su=EROMART%20Enquiry" target="_blank" rel="noopener noreferrer">
+                  eromartindia@gmail.com
                 </a>
               </li>
             </ul>

@@ -21,15 +21,17 @@ export default function Gallery({ galleryOpen, setGalleryOpen }: GalleryProps) {
         </button>
       </div>
       
-      <div className="gallery-grid">
+      <div className="product-grid">
         {galleryItems.map((item, index) => (
-          <article key={item.id} className="gallery-card reveal-up hover-lift" style={{ transitionDelay: `${(index % 3) * 100}ms` }}>
-            <div className="gallery-card-media">
+          <article key={item.id} className="product-card reveal-up" style={{ transitionDelay: `${(index % 3) * 100}ms` }}>
+            <div className="product-card-media" style={{ height: '300px' }}>
               <img src={item.image} alt={item.title} loading="lazy" decoding="async" />
             </div>
-            <div className="gallery-card-info">
-              <span className="gallery-subtitle">{item.subtitle}</span>
-              <h3 className="gallery-title">{item.title}</h3>
+            <div className="product-card-info">
+              <div className="product-card-head">
+                <span className="product-code">{item.subtitle}</span>
+              </div>
+              <h3 style={{ fontSize: '18px', fontWeight: '700', marginTop: '8px', color: 'var(--ink)', letterSpacing: '-0.02em' }}>{item.title}</h3>
             </div>
           </article>
         ))}

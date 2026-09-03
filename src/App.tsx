@@ -15,13 +15,13 @@ import { FeaturesHero, FeaturesAdvantage } from './pages/Features/Features';
 import Journal from './pages/Journal/Journal';
 import AboutUs from './pages/AboutUs/AboutUs';
 
-import { Product, products, extraProducts } from './pages/Products/productData';
+import { Product, cashCountingMachineProducts, billingMachineProducts } from './pages/Products/productData';
 
 // Wrapper to find the product by ID and render ProductDetails
 function ProductRouteWrapper({ addToCart, buyNow, navigate }: any) {
   const { id } = useParams();
-  const allProducts = [...products, ...extraProducts];
-  const product = allProducts.find(p => p.code.toLowerCase().replace(/[\s/]+/g, '-') === id) || products[0];
+  const allProducts = [...cashCountingMachineProducts, ...billingMachineProducts];
+  const product = allProducts.find(p => p.code.toLowerCase().replace(/[\s/]+/g, '-') === id) || allProducts[0];
 
   return (
     <ProductDetails 
@@ -36,26 +36,29 @@ function ProductRouteWrapper({ addToCart, buyNow, navigate }: any) {
 }
 
 // Home Page content
-function HomePage({ mobileMenu, setMobileMenu, setCartOpen, openGallery, added, quantity, addToCart, navigate }: any) {
+function HomePage({ mobileMenu, setMobileMenu, setCartOpen, added, quantity, addToCart, navigate }: any) {
   return (
     <>
       <Hero 
         mobileMenu={mobileMenu}
         setMobileMenu={setMobileMenu}
         setCartOpen={setCartOpen}
-        openGallery={openGallery}
+        openGallery={() => navigate('/gallery')}
         added={added}
         quantity={quantity}
       />
       <main id="top">
         <FeaturesHero />
         <Products 
+          productsList={[...cashCountingMachineProducts.slice(0, 3), ...billingMachineProducts.slice(0, 3)]}
           addToCart={addToCart} 
           onProductClick={(p: Product) => navigate(`/product/${p.code.toLowerCase().replace(/[\s/]+/g, '-')}`)} 
-          onExploreMore={() => { 
-            // Just go to explore more for the first product or a general one
-            navigate(`/explore-more/general`); 
-          }} 
+          onExploreCashCounting={() => { 
+            navigate(`/cash-counting-machine`); 
+          }}
+          onExploreBilling={() => { 
+            navigate(`/billing-machine`); 
+          }}
         />
         <FeaturesAdvantage />
         <Journal />
@@ -70,10 +73,9 @@ function App() {
   const [added, setAdded] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const [galleryOpen, setGalleryOpen] = useState(false);
   
   // Selected product specifically for checkout/cart
-  const [selectedProduct, setSelectedProduct] = useState<Product>(products[0]);
+  const [selectedProduct, setSelectedProduct] = useState<Product>(cashCountingMachineProducts[0]);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -92,12 +94,9 @@ function App() {
   };
 
   const openGallery = () => {
-    setGalleryOpen(true);
     setMobileMenu(false);
-    if (location.pathname !== '/') {
-      navigate('/');
-    }
-    window.setTimeout(() => document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' }), 100);
+    navigate('/gallery');
+    window.scrollTo(0, 0);
   };
 
   const scrollToTop = () => {
@@ -137,22 +136,29 @@ function App() {
     return () => {
       elements.forEach(el => observer.unobserve(el));
     };
-  }, [location.pathname, galleryOpen]);
+  }, [location.pathname]);
 
   return (
     <div className="app-shell page-transition-enter">
-      {isAltView && (
-        <div className="navbar-light-theme" style={{ paddingBottom: '20px', paddingTop: '20px' }}>
-          <Navbar 
-            mobileMenu={mobileMenu}
-            setMobileMenu={setMobileMenu}
-            setCartOpen={setCartOpen}
-            openGallery={openGallery}
-            added={added}
-            quantity={quantity}
-          />
-        </div>
-      )}
+      <div 
+        className="navbar-light-theme" 
+        style={{ 
+          paddingBottom: '0', 
+          paddingTop: '16px', 
+          position: location.pathname === '/' ? 'absolute' : 'relative',
+          width: '100%',
+          zIndex: 50
+        }}
+      >
+        <Navbar 
+          mobileMenu={mobileMenu}
+          setMobileMenu={setMobileMenu}
+          setCartOpen={setCartOpen}
+          openGallery={openGallery}
+          added={added}
+          quantity={quantity}
+        />
+      </div>
 
       <div key={location.pathname} className="page-transition-enter" style={{ flex: 1 }}>
         <Routes>
@@ -171,12 +177,57 @@ function App() {
             </main>
           } />
 
+          <Route path="/cash-counting-machine" element={
+            <main id="top">
+              <ExploreMoreProductPage 
+                category="cash-counting-machine"
+                addToCart={addToCart}
+                onProductClick={(p: Product) => navigate(`/product/${p.code.toLowerCase().replace(/[\s/]+/g, '-')}`)}
+              />
+            </main>
+          } />
+
+          <Route path="/billing-machine" element={
+            <main id="top">
+              <ExploreMoreProductPage 
+                category="billing-machine"
+                addToCart={addToCart}
+                onProductClick={(p: Product) => navigate(`/product/${p.code.toLowerCase().replace(/[\s/]+/g, '-')}`)}
+              />
+            </main>
+          } />
+
           <Route path="/explore-more/:productId" element={
             <main id="top">
               <ExploreMoreProductPage 
                 addToCart={addToCart}
                 onProductClick={(p: Product) => navigate(`/product/${p.code.toLowerCase().replace(/[\s/]+/g, '-')}`)}
               />
+            </main>
+          } />
+
+          <Route path="/gallery" element={
+            <main id="top" style={{ paddingTop: '0px', minHeight: '80vh' }}>
+              <Gallery galleryOpen={true} setGalleryOpen={() => navigate('/')} />
+            </main>
+          } />
+
+          <Route path="/about-us" element={
+            <main id="top" style={{ paddingTop: '0px' }}>
+              <FeaturesHero />
+              <FeaturesAdvantage />
+            </main>
+          } />
+
+          <Route path="/contact-us" element={
+            <main id="top" style={{ paddingTop: '0px' }}>
+              <AboutUs />
+            </main>
+          } />
+
+          <Route path="/blog" element={
+            <main id="top" style={{ paddingTop: '0px' }}>
+              <Journal />
             </main>
           } />
 
@@ -194,8 +245,6 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
-
-      <Gallery galleryOpen={galleryOpen} setGalleryOpen={setGalleryOpen} />
 
       <Footer scrollToTop={scrollToTop} openGallery={openGallery} />
 

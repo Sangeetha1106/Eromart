@@ -2,25 +2,16 @@ import imgCashCounter from '../../assets/images/gallery_cash_counter.png';
 import imgPos from '../../assets/images/gallery_pos.png';
 import imgShowroom from '../../assets/images/gallery_showroom.png';
 
+const galleryImagesObj = import.meta.glob('../../assets/images/Gallery/*.{jpeg,png,jpg}', { eager: true, import: 'default' });
+const galleryImages = Object.values(galleryImagesObj) as string[];
+
 export const galleryItems = [
-  {
-    id: 1,
-    image: imgCashCounter,
-    title: 'Precision in Action',
-    subtitle: 'Professional counting environments'
-  },
-  {
-    id: 2,
-    image: imgPos,
-    title: 'Retail Integration',
-    subtitle: 'Sleek point-of-sale solutions'
-  },
-  {
-    id: 3,
-    image: imgShowroom,
-    title: 'The Complete Setup',
-    subtitle: 'EROMART machine showcase'
-  }
+  ...galleryImages.map((img, i) => ({
+    id: i + 1,
+    image: img,
+    title: `EROMART Installation ${i + 1}`,
+    subtitle: 'Customer Setup'
+  }))
 ];
 
 import storePhotoImg from '../../assets/images/gallery_showroom.png';

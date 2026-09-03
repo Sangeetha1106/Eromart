@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { Plus, ArrowLeft, Heart } from 'lucide-react';
-import { Product, products, extraProducts } from './productData';
+import { Product, cashCountingMachineProducts, billingMachineProducts } from './productData';
 
 type ProductsProps = {
   addToCart: (product: Product) => void;
   onProductClick: (product: Product) => void;
-  onExploreMore?: () => void;
+  onExploreCashCounting?: () => void;
+  onExploreBilling?: () => void;
   isExploreMorePage?: boolean;
   goBack?: () => void;
+  productsList?: Product[];
 };
 
-export default function Products({ addToCart, onProductClick, onExploreMore, isExploreMorePage, goBack }: ProductsProps) {
-  const displayedProducts = isExploreMorePage ? extraProducts : products;
+export default function Products({ addToCart, onProductClick, onExploreCashCounting, onExploreBilling, isExploreMorePage, goBack, productsList }: ProductsProps) {
+  const displayedProducts = productsList ? productsList : (isExploreMorePage ? [...cashCountingMachineProducts.slice(3), ...billingMachineProducts.slice(3)] : [...cashCountingMachineProducts.slice(0, 3), ...billingMachineProducts.slice(0, 3)]);
 
   const [likedProducts, setLikedProducts] = useState<Record<string, boolean>>(() => {
     try {
@@ -32,7 +34,7 @@ export default function Products({ addToCart, onProductClick, onExploreMore, isE
   };
 
   return (
-    <section className="catalog-section" id={isExploreMorePage ? "" : "product"} style={isExploreMorePage ? { paddingTop: '60px', minHeight: '80vh', background: 'var(--paper)' } : {}}>
+    <section className="catalog-section" id={isExploreMorePage ? "" : "product"} style={isExploreMorePage ? { paddingTop: '0px', minHeight: '80vh', background: 'var(--paper)' } : {}}>
       {isExploreMorePage && goBack && (
         <button 
           onClick={goBack} 
@@ -101,15 +103,24 @@ export default function Products({ addToCart, onProductClick, onExploreMore, isE
         ))}
       </div>
 
-      {!isExploreMorePage && onExploreMore && (
-        <div style={{ textAlign: 'center', marginTop: '60px' }}>
-          <button 
-            onClick={onExploreMore} 
-            className="btn-get-started hover-lift" 
-            style={{ padding: '16px 40px', background: 'var(--ink)', color: '#fff', fontSize: '15px' }}
-          >
-            Explore More
-          </button>
+      {!isExploreMorePage && (onExploreCashCounting || onExploreBilling) && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '16px', marginTop: '60px' }}>
+          {onExploreCashCounting && (
+            <button 
+              onClick={onExploreCashCounting} 
+              className="btn-explore-more" 
+            >
+              Explore More Cash Counting Machines
+            </button>
+          )}
+          {onExploreBilling && (
+            <button 
+              onClick={onExploreBilling} 
+              className="btn-explore-more secondary" 
+            >
+              Explore More Billing Machines
+            </button>
+          )}
         </div>
       )}
     </section>

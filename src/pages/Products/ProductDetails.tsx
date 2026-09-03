@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, ShieldCheck, Truck, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Product, products, extraProducts } from './productData';
+import { Product, cashCountingMachineProducts, billingMachineProducts } from './productData';
 
 type ProductDetailsProps = {
   product: Product;
@@ -14,11 +14,15 @@ type ProductDetailsProps = {
 export default function ProductDetails({ product, goBack, addToCart, buyNow, onProductSelect, onExploreMore }: ProductDetailsProps) {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  useEffect(() => {
-    setActiveImageIndex(0);
-  }, [product.code]);
+  let productImages = product.images && product.images.length > 0 ? product.images : [product.image];
 
-  const productImages = product.images && product.images.length > 0 ? product.images : [product.image];
+  useEffect(() => {
+    if (productImages.includes(product.image)) {
+      setActiveImageIndex(productImages.indexOf(product.image));
+    } else {
+      setActiveImageIndex(0);
+    }
+  }, [product.code, product.image]);
 
   const handlePrev = (e?: React.MouseEvent) => {
     if (e) {
@@ -36,7 +40,8 @@ export default function ProductDetails({ product, goBack, addToCart, buyNow, onP
     setActiveImageIndex((prev) => (prev === productImages.length - 1 ? 0 : prev + 1));
   };
 
-  const relatedProducts = products.filter(p => p.code !== product.code).slice(0, 4);
+  const allProducts = [...cashCountingMachineProducts, ...billingMachineProducts];
+  const relatedProducts = allProducts.filter(p => p.code !== product.code).slice(0, 4);
 
   return (
     <section className="product-details-view" id="product-details" style={{ padding: '60px 8vw 100px', minHeight: '80vh', background: 'var(--paper)' }}>
@@ -109,7 +114,7 @@ export default function ProductDetails({ product, goBack, addToCart, buyNow, onP
               top: 50%;
               transform: translateY(-50%);
               background: #fff;
-              border: 1px solid var(--line);
+              border: 1px solid rgba(0,0,0,0.05);
               border-radius: 50%;
               width: 44px;
               height: 44px;
@@ -117,20 +122,19 @@ export default function ProductDetails({ product, goBack, addToCart, buyNow, onP
               align-items: center;
               justify-content: center;
               cursor: pointer;
-              box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-              transition: all 0.2s ease;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+              transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
               color: var(--ink);
               z-index: 10;
-              opacity: 0;
-            }
-            .gallery-main-container:hover .gallery-nav-btn {
-              opacity: 1;
             }
             .gallery-nav-btn:hover {
-              background: var(--orange);
-              color: #fff;
-              border-color: var(--orange);
+              background: #fff;
+              color: var(--orange);
               transform: translateY(-50%) scale(1.05);
+              box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+            }
+            .gallery-nav-btn:active {
+              transform: translateY(-50%) scale(0.95);
             }
             .gallery-nav-btn.left { left: 16px; }
             .gallery-nav-btn.right { right: 16px; }
@@ -154,7 +158,6 @@ export default function ProductDetails({ product, goBack, addToCart, buyNow, onP
               </>
             )}
             <img 
-              key={product.code + activeImageIndex}
               src={productImages[activeImageIndex]} 
               alt={product.name} 
               className="gallery-main-img"
@@ -247,7 +250,11 @@ export default function ProductDetails({ product, goBack, addToCart, buyNow, onP
               Add to Cart
             </button>
             <button 
-              onClick={() => buyNow(product)}
+              onClick={(e) => {
+                e.preventDefault();
+                const text = `Hi, I am interested in ${product.name}. Please share more details and pricing.`;
+                window.open(`https://wa.me/919444307037?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+              }}
               style={{ 
                 flex: '1', minWidth: '180px', padding: '16px 24px', borderRadius: '100px', 
                 border: '1.5px solid var(--orange)', background: 'var(--orange)', color: '#fff', 
