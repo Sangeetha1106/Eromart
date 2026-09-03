@@ -38,7 +38,7 @@ export default function Products({ addToCart, onProductClick, onExploreCashCount
       {isExploreMorePage && goBack && (
         <button 
           onClick={goBack} 
-          style={{ marginBottom: '40px', display: 'inline-flex', alignItems: 'center', border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '13.5px', color: 'var(--muted)', fontWeight: '600', transition: '0.2s' }}
+          style={{ marginTop: '40px', marginBottom: '40px', display: 'inline-flex', alignItems: 'center', border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '13.5px', color: 'var(--muted)', fontWeight: '600', transition: '0.2s' }}
           onMouseOver={(e) => e.currentTarget.style.color = 'var(--orange)'}
           onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}
         >
@@ -48,7 +48,7 @@ export default function Products({ addToCart, onProductClick, onExploreCashCount
 
       <div className="section-heading reveal-up">
         <div>
-          <span className="section-kicker">{isExploreMorePage ? "More from Eromart" : "01 / The Eromart range"}</span>
+          <span className="section-kicker" style={{ position: 'relative', top: '10px' }}>{isExploreMorePage ? "More from Eromart" : "01 / The Eromart range"}</span>
           <h2>{isExploreMorePage ? "Explore More" : "One machine"}<br /><em>{isExploreMorePage ? "Machines" : "for every counter."}</em></h2>
         </div>
         <p>From the compact EM-320 to the heavy-duty EM-900, there is an Eromart built for the way you sell. Pick the one that fits your shop.</p>
