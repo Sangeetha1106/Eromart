@@ -1,5 +1,12 @@
 export type ProductCategory = 'Cash Counting Machine' | 'Billing Machine';
-export type Product = { name: string; code: string; price: number; oldPrice: number; image: string; images?: string[]; tone: string; badge?: string; category: ProductCategory };
+export type FeatureIconKey = 'display' | 'printer' | 'link' | 'battery' | 'cutter' | 'storage' | 'connectivity' | 'speed' | 'accuracy' | 'durability' | 'sensor' | 'currency';
+export type ProductFeature = { icon: FeatureIconKey; label: string };
+
+export type Product = {
+  name: string; code: string; price: number; oldPrice: number; image: string; images?: string[];
+  tone: string; badge?: string; category: ProductCategory;
+  features?: ProductFeature[]; rating?: number; reviewCount?: number;
+};
 
 // Dynamically import all images from the specific folders
 const cashCounterImagesObj = import.meta.glob('../../assets/images/cash counter machine/*.{jpeg,png,jpg}', { eager: true, import: 'default' });
@@ -18,6 +25,29 @@ const existingProductNames = [
   "EM-1100 Industrial", "EM-1250 Pro Max", "EM-1500 Ultimate"
 ];
 
+const cashCountingFeaturePool: ProductFeature[] = [
+  { icon: 'accuracy', label: '99.9% Accuracy' },
+  { icon: 'speed', label: 'High Speed Count' },
+  { icon: 'currency', label: 'Multi-Currency' },
+  { icon: 'sensor', label: 'Fake Note Detection' },
+  { icon: 'durability', label: 'Heavy Duty Build' },
+  { icon: 'battery', label: 'Long Battery Life' },
+];
+
+const billingFeaturePool: ProductFeature[] = [
+  { icon: 'display', label: '7" Touch Display' },
+  { icon: 'printer', label: 'High Speed Printer' },
+  { icon: 'link', label: 'Easy Integration' },
+  { icon: 'battery', label: 'Long Battery Life' },
+  { icon: 'cutter', label: 'Auto Cutter' },
+  { icon: 'storage', label: 'Large Storage' },
+  { icon: 'connectivity', label: 'Multi Connectivity' },
+];
+
+function pickFeatures(pool: ProductFeature[], i: number): ProductFeature[] {
+  return [pool[i % pool.length], pool[(i + 1) % pool.length], pool[(i + 2) % pool.length]];
+}
+
 // Generate products automatically based on folder contents
 export const cashCountingMachineProducts: Product[] = cashCounterImages.map((img, i) => ({
   name: existingProductNames[i] || `Cash Counter Pro ${i + 1}`,
@@ -28,7 +58,10 @@ export const cashCountingMachineProducts: Product[] = cashCounterImages.map((img
   images: [img],
   tone: tones[i % tones.length],
   badge: i === 0 ? 'Best seller' : undefined,
-  category: 'Cash Counting Machine'
+  category: 'Cash Counting Machine',
+  features: pickFeatures(cashCountingFeaturePool, i),
+  rating: +(4.5 + ((i * 7) % 5) / 10).toFixed(1),
+  reviewCount: 84 + i * 19,
 }));
 
 export const billingMachineProducts: Product[] = billingMachineImages.map((img, i) => ({
@@ -40,5 +73,8 @@ export const billingMachineProducts: Product[] = billingMachineImages.map((img, 
   images: [img],
   tone: tones[i % tones.length],
   badge: i === 0 ? 'New' : undefined,
-  category: 'Billing Machine'
+  category: 'Billing Machine',
+  features: pickFeatures(billingFeaturePool, i),
+  rating: +(4.5 + ((i * 7) % 5) / 10).toFixed(1),
+  reviewCount: 90 + i * 21,
 }));

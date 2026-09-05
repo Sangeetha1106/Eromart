@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, ArrowRight, ShieldCheck, Truck, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ShieldCheck, Truck, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Product, cashCountingMachineProducts, billingMachineProducts } from './productData';
+import ProductCard from './ProductCard';
 
 type ProductDetailsProps = {
   product: Product;
@@ -139,7 +140,6 @@ export default function ProductDetails({ product, goBack, addToCart, buyNow, onP
             .gallery-nav-btn.left { left: 16px; }
             .gallery-nav-btn.right { right: 16px; }
             
-            /* Custom scrollbar for thumbnails on mobile */
             .thumb-scroll-container::-webkit-scrollbar {
               height: 4px;
             }
@@ -149,7 +149,6 @@ export default function ProductDetails({ product, goBack, addToCart, buyNow, onP
             }
           `}</style>
 
-          {/* Main Image */}
           <div className="gallery-main-container" style={{ position: 'relative', borderRadius: '24px', overflow: 'hidden', backgroundColor: 'rgba(0,0,0,0.02)', padding: '12%', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '480px' }}>
             {productImages.length > 1 && (
               <>
@@ -165,7 +164,6 @@ export default function ProductDetails({ product, goBack, addToCart, buyNow, onP
             />
           </div>
           
-          {/* Thumbnails */}
           {productImages.length > 1 && (
             <div className="thumb-scroll-container" style={{ display: 'flex', gap: '14px', overflowX: 'auto', paddingBottom: '12px', scrollBehavior: 'smooth' }}>
               {productImages.map((imgSrc, idx) => (
@@ -198,18 +196,7 @@ export default function ProductDetails({ product, goBack, addToCart, buyNow, onP
             </div>
           )}
 
-          {/* Explore More Button under Gallery */}
-          {onExploreMore && (
-            <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-              <button 
-                onClick={onExploreMore} 
-                className="btn-get-started" 
-                style={{ padding: '14px 32px', background: 'var(--ink)', color: '#fff', fontSize: '14px', borderRadius: '100px', width: '100%', maxWidth: '320px', border: 'none', fontWeight: '600' }}
-              >
-                Explore More Gallery
-              </button>
-            </div>
-          )}
+
         </div>
 
         {/* Right: Info */}
@@ -234,7 +221,6 @@ export default function ProductDetails({ product, goBack, addToCart, buyNow, onP
             The {product.name} is engineered to integrate flawlessly into your modern retail counter. Featuring state-of-the-art sensors for 99.9% accuracy and an intuitive visual interface, it turns everyday transactions into an effortless ritual.
           </p>
 
-          {/* E-commerce Buttons */}
           <div style={{ display: 'flex', gap: '16px', marginBottom: '48px', flexWrap: 'wrap' }}>
             <button 
               onClick={() => addToCart(product)}
@@ -296,42 +282,14 @@ export default function ProductDetails({ product, goBack, addToCart, buyNow, onP
       {relatedProducts.length > 0 && (
         <div style={{ paddingTop: '60px', borderTop: '1px solid var(--line)' }}>
           <h3 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '30px', color: 'var(--ink)' }}>You might also like</h3>
-          <div className="product-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
+          <div className="product-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
             {relatedProducts.map((relatedProduct) => (
-              <article 
-                key={relatedProduct.code} 
-                className={`product-card tone-${relatedProduct.tone}`}
+              <ProductCard
+                key={relatedProduct.code}
+                product={relatedProduct}
                 onClick={() => onProductSelect?.(relatedProduct)}
-                style={{ cursor: 'pointer' }}
-              >
-                <div className="product-card-media">
-                  <img src={relatedProduct.image} alt={relatedProduct.name} loading="lazy" decoding="async" />
-                  {relatedProduct.badge && <span className="product-badge">{relatedProduct.badge}</span>}
-                </div>
-                <div className="product-card-info">
-                  <div className="product-card-head">
-                    <span className="product-code">{relatedProduct.code}</span>
-                    <div className="rating">★★★★★</div>
-                  </div>
-                  <h3>{relatedProduct.name}</h3>
-                  <div className="product-card-price">
-                    <div>
-                      <strong>₹{relatedProduct.price.toLocaleString('en-IN')}</strong>
-                      <del>₹{relatedProduct.oldPrice.toLocaleString('en-IN')}</del>
-                    </div>
-                    <button 
-                      className="add-button" 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        addToCart(relatedProduct);
-                      }} 
-                      aria-label={`Add ${relatedProduct.name} to cart`}
-                    >
-                      <Plus size={16} />
-                    </button>
-                  </div>
-                </div>
-              </article>
+                addToCart={addToCart}
+              />
             ))}
           </div>
         </div>

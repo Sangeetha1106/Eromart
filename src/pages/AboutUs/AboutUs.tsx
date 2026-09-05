@@ -6,6 +6,25 @@ import {
 import { storePhoto } from '../Gallery/galleryData';
 
 export default function AboutUs() {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const fullName = formData.get('fullName');
+    const phone = formData.get('phone');
+    
+    // Get the display text for business type
+    const businessTypeSelect = e.currentTarget.querySelector('#businessType') as HTMLSelectElement;
+    const businessType = businessTypeSelect.options[businessTypeSelect.selectedIndex]?.text || '';
+    
+    const interest = formData.get('interest');
+    const message = formData.get('message') || 'No message provided';
+
+    const text = `*New Consultation Request*\n\n*Name:* ${fullName}\n*Phone:* ${phone}\n*Business Type:* ${businessType}\n*Interested In:* ${interest}\n*Message:* ${message}`;
+    
+    const whatsappUrl = `https://wa.me/919444307037?text=${encodeURIComponent(text)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   return (
     <section className="consultation-section" id="contact">
       <div className="consultation-container">
@@ -28,18 +47,18 @@ export default function AboutUs() {
             <h3 className="section-title">Talk to an EROMART Specialist</h3>
             <p className="form-description">Tell us what you need and we'll help you choose the right machine.</p>
             
-            <form className="consultation-form" onSubmit={(e) => { e.preventDefault(); window.location.href = "mailto:eromartindia@gmail.com"; }}>
+            <form className="consultation-form" onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="fullName">Full Name</label>
-                <input type="text" id="fullName" placeholder="John Doe" required />
+                <input type="text" id="fullName" name="fullName" placeholder="John Doe" required />
               </div>
               <div className="form-group">
                 <label htmlFor="phone">Phone Number</label>
-                <input type="tel" id="phone" placeholder="+91 00000 00000" required />
+                <input type="tel" id="phone" name="phone" placeholder="+91 00000 00000" required />
               </div>
               <div className="form-group">
                 <label htmlFor="businessType">Business Type</label>
-                <select id="businessType" required>
+                <select id="businessType" name="businessType" required>
                   <option value="">Select your business type</option>
                   <option value="retail">Retail Store</option>
                   <option value="supermarket">Supermarket</option>
@@ -51,22 +70,22 @@ export default function AboutUs() {
                 <label>Interested In</label>
                 <div className="radio-group">
                   <label className="radio-label">
-                    <input type="radio" name="interest" value="cash" required />
+                    <input type="radio" name="interest" value="Cash Counting Machine" required />
                     <span>Cash Counting Machine</span>
                   </label>
                   <label className="radio-label">
-                    <input type="radio" name="interest" value="billing" required />
+                    <input type="radio" name="interest" value="Billing Machine" required />
                     <span>Billing Machine</span>
                   </label>
                   <label className="radio-label">
-                    <input type="radio" name="interest" value="both" required />
+                    <input type="radio" name="interest" value="Both" required />
                     <span>Both</span>
                   </label>
                 </div>
               </div>
               <div className="form-group">
                 <label htmlFor="message">Message</label>
-                <textarea id="message" rows={4} placeholder="Tell us about your specific requirements..."></textarea>
+                <textarea id="message" name="message" rows={4} placeholder="Tell us about your specific requirements..."></textarea>
               </div>
               <button type="submit" className="submit-btn hover-lift">
                 Request a Consultation <ArrowRight size={18} />

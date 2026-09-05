@@ -46,6 +46,11 @@ export default function Checkout({ product, quantity, goBack }: CheckoutProps) {
             </div>
 
             <button 
+              onClick={() => {
+                const message = `Hi, I would like to place an order for ${product.name} (Qty: ${quantity}). Total: ₹${total.toLocaleString('en-IN')}. Please help me complete this purchase.`;
+                const whatsappUrl = `https://wa.me/919444307037?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+              }}
               style={{ 
                 marginTop: '20px', width: '100%', padding: '18px', borderRadius: '100px', 
                 border: 'none', background: 'var(--orange)', color: '#fff', 

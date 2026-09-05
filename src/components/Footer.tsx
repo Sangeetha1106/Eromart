@@ -48,9 +48,9 @@ export default function Footer({ scrollToTop, openGallery }: FooterProps) {
 
           {/* Quick Links Column */}
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-white tracking-wide uppercase text-sm">Quick Links</h4>
+            <h4 className="text-lg font-semibold text-white tracking-wide uppercase text-sm">Home</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#top" className="hover:text-orange-400 transition-colors">Home</a></li>
+              {/* <li><a href="#top" className="hover:text-orange-400 transition-colors">Home</a></li> */}
               <li><a href="#about" className="hover:text-orange-400 transition-colors">About Us</a></li>
               <li><a href="#product" className="hover:text-orange-400 transition-colors">Cash Counting Machines</a></li>
               <li><a href="#product" className="hover:text-orange-400 transition-colors">Billing Machines</a></li>

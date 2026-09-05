@@ -23,10 +23,17 @@ export default function ExploreMoreProductPage({ addToCart, onProductClick, cate
   };
 
   let customProductsList: Product[] | undefined = undefined;
+  let pageTitle = "Explore More";
+  let pageSubtitle = "Machines";
+  
   if (activeCategory === 'cash-counting-machine') {
     customProductsList = cashCountingMachineProducts;
+    pageTitle = "Cash Counting";
+    pageSubtitle = "Machines";
   } else if (activeCategory === 'billing-machine') {
     customProductsList = billingMachineProducts;
+    pageTitle = "Billing";
+    pageSubtitle = "Machines";
   }
 
   return (
@@ -36,6 +43,8 @@ export default function ExploreMoreProductPage({ addToCart, onProductClick, cate
       onProductClick={onProductClick || (() => {})}
       goBack={handleBack}
       productsList={customProductsList}
+      exploreTitle={pageTitle}
+      exploreSubtitle={pageSubtitle}
     />
   );
 }

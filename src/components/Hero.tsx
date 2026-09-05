@@ -2,7 +2,7 @@ import { CircleCheck, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navbar from './Navbar';
 
-import defaultHeroBg from '../assets/images/Home/image copy 3.png';
+import defaultHeroBg from '../assets/images/Home/image.png';
 
 type HeroProps = {
   mobileMenu: boolean;
